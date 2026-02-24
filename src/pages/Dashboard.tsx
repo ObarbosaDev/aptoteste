@@ -4,16 +4,16 @@ import PorteiroDashboard from "@/components/dashboards/PorteiroDashboard";
 import MoradorDashboard from "@/components/dashboards/MoradorDashboard";
 
 const Dashboard = () => {
-  const { user } = useAuth();
-  if (!user) return null;
+  const { role, profile } = useAuth();
+  if (!role) return null;
 
-  switch (user.role) {
+  switch (role) {
     case "sindico":
       return <SindicoDashboard />;
     case "porteiro":
       return <PorteiroDashboard />;
     case "morador":
-      return <MoradorDashboard />;
+      return <MoradorDashboard userName={profile?.full_name || "Morador"} />;
   }
 };
 
