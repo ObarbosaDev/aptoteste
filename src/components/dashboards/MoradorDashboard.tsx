@@ -1,19 +1,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Package, QrCode, AlertTriangle, Megaphone } from "lucide-react";
-import { mockPackages, mockNotices, mockOccurrences } from "@/data/mock";
+import { mockPackages, mockNotices } from "@/data/mock";
 import { useNavigate } from "react-router-dom";
 
-const MoradorDashboard = () => {
+interface Props {
+  userName?: string;
+}
+
+const MoradorDashboard = ({ userName = "Morador" }: Props) => {
   const navigate = useNavigate();
   const myPending = mockPackages.filter((p) => p.residentId === "3" && p.status === "pendente");
-  const myHistory = mockPackages.filter((p) => p.residentId === "3" && p.status === "retirada");
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Meu Painel</h1>
-        <p className="text-muted-foreground">Bem-vinda, Maria Oliveira</p>
+        <p className="text-muted-foreground">Bem-vindo(a), {userName}</p>
       </div>
 
       {myPending.length > 0 && (
@@ -37,6 +40,7 @@ const MoradorDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
+              {myPending.length === 0 && <p className="text-sm text-muted-foreground py-4 text-center">Nenhuma encomenda pendente</p>}
               {myPending.map((p) => (
                 <div key={p.id} className="flex items-center justify-between rounded-lg border p-3">
                   <div>

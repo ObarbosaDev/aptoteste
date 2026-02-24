@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,8 +22,8 @@ const statusIcon: Record<OccurrenceStatus, React.ElementType> = {
 };
 
 const Ocorrencias = () => {
-  const { user } = useAuth();
-  const isSindico = user?.role === "sindico";
+  const { role } = useAuth();
+  const isSindico = role === "sindico";
   const [filter, setFilter] = useState<string>("all");
   const [selected, setSelected] = useState<typeof mockOccurrences[0] | null>(null);
 
@@ -85,7 +85,6 @@ const Ocorrencias = () => {
         })}
       </div>
 
-      {/* Detail Dialog with Timeline */}
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
         <DialogContent className="max-w-lg">
           <DialogHeader><DialogTitle>{selected?.title}</DialogTitle></DialogHeader>
