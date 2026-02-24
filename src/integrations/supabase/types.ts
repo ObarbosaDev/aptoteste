@@ -14,16 +14,352 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      notices: {
+        Row: {
+          author_id: string | null
+          author_name: string
+          content: string
+          created_at: string
+          date: string | null
+          id: string
+          is_new: boolean
+          location: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          author_id?: string | null
+          author_name?: string
+          content: string
+          created_at?: string
+          date?: string | null
+          id?: string
+          is_new?: boolean
+          location?: string | null
+          title: string
+          type?: string
+        }
+        Update: {
+          author_id?: string | null
+          author_name?: string
+          content?: string
+          created_at?: string
+          date?: string | null
+          id?: string
+          is_new?: boolean
+          location?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      occurrence_events: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          occurrence_id: string
+          performed_by: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          occurrence_id: string
+          performed_by?: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          occurrence_id?: string
+          performed_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "occurrence_events_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      occurrences: {
+        Row: {
+          block: string
+          created_at: string
+          description: string
+          id: string
+          photo_url: string | null
+          resident_id: string | null
+          resident_name: string
+          status: string
+          title: string
+          type: string
+          unit: string
+        }
+        Insert: {
+          block?: string
+          created_at?: string
+          description?: string
+          id?: string
+          photo_url?: string | null
+          resident_id?: string | null
+          resident_name?: string
+          status?: string
+          title: string
+          type?: string
+          unit?: string
+        }
+        Update: {
+          block?: string
+          created_at?: string
+          description?: string
+          id?: string
+          photo_url?: string | null
+          resident_id?: string | null
+          resident_name?: string
+          status?: string
+          title?: string
+          type?: string
+          unit?: string
+        }
+        Relationships: []
+      }
+      packages: {
+        Row: {
+          block: string
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          photo_url: string | null
+          picked_up_at: string | null
+          picked_up_by: string | null
+          received_at: string
+          resident_id: string | null
+          resident_name: string
+          status: string
+          type: string
+          unit: string
+        }
+        Insert: {
+          block?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          photo_url?: string | null
+          picked_up_at?: string | null
+          picked_up_by?: string | null
+          received_at?: string
+          resident_id?: string | null
+          resident_name?: string
+          status?: string
+          type?: string
+          unit?: string
+        }
+        Update: {
+          block?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          photo_url?: string | null
+          picked_up_at?: string | null
+          picked_up_by?: string | null
+          received_at?: string
+          resident_id?: string | null
+          resident_name?: string
+          status?: string
+          type?: string
+          unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "packages_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          block: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+          unit: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          block?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          unit?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          block?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          unit?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reservations: {
+        Row: {
+          block: string
+          created_at: string
+          date: string
+          end_time: string
+          id: string
+          notes: string | null
+          resident_id: string | null
+          resident_name: string
+          space: string
+          start_time: string
+          status: string
+          unit: string
+        }
+        Insert: {
+          block?: string
+          created_at?: string
+          date: string
+          end_time: string
+          id?: string
+          notes?: string | null
+          resident_id?: string | null
+          resident_name?: string
+          space: string
+          start_time: string
+          status?: string
+          unit?: string
+        }
+        Update: {
+          block?: string
+          created_at?: string
+          date?: string
+          end_time?: string
+          id?: string
+          notes?: string | null
+          resident_id?: string | null
+          resident_name?: string
+          space?: string
+          start_time?: string
+          status?: string
+          unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      visitors: {
+        Row: {
+          block: string
+          created_at: string
+          document: string
+          entry_at: string
+          exit_at: string | null
+          id: string
+          name: string
+          registered_by: string | null
+          resident_name: string
+          status: string
+          unit: string
+          vehicle: string | null
+        }
+        Insert: {
+          block?: string
+          created_at?: string
+          document?: string
+          entry_at?: string
+          exit_at?: string | null
+          id?: string
+          name: string
+          registered_by?: string | null
+          resident_name?: string
+          status?: string
+          unit?: string
+          vehicle?: string | null
+        }
+        Update: {
+          block?: string
+          created_at?: string
+          document?: string
+          entry_at?: string
+          exit_at?: string | null
+          id?: string
+          name?: string
+          registered_by?: string | null
+          resident_name?: string
+          status?: string
+          unit?: string
+          vehicle?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "sindico" | "porteiro" | "morador"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +486,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["sindico", "porteiro", "morador"],
+    },
   },
 } as const
