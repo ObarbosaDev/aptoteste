@@ -46,8 +46,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    console.log("[v0] AuthContext initializing, supabase URL exists:", !!import.meta.env.VITE_SUPABASE_URL);
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        console.log("[v0] Auth state changed:", _event, !!session);
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
@@ -61,6 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("[v0] getSession result:", !!session);
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
