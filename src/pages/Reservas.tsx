@@ -38,26 +38,37 @@ const Reservas = () => {
   const handleSubmit = async () => {
     if (!space || !date || !startTime || !endTime) { toast.error("Preencha todos os campos obrigatórios"); return; }
     setSubmitting(true);
-    const { error } = await supabase.from("reservations").insert({
-      space, date, start_time: startTime, end_time: endTime, notes: notes || null,
-      resident_id: profile?.id || null,
-      resident_name: profile?.full_name || "",
-      unit: profile?.unit || "",
-      block: profile?.block || "",
-    });
-    setSubmitting(false);
-    if (error) toast.error("Erro: " + error.message);
-    else {
-      toast.success("Reserva solicitada!");
-      setDialogOpen(false);
-      setSpace(""); setDate(""); setStartTime(""); setEndTime(""); setNotes("");
+    try {
+      const { error } = await supabase.from("reservations").insert({
+        space, date, start_time: startTime, end_time: endTime, notes: notes || null,
+        resident_id: profile?.id || null,
+        resident_name: profile?.full_name || "",
+        unit: profile?.unit || "",
+        block: profile?.block || "",
+      });
+      if (error) toast.error("Erro: " + error.message);
+      else {
+        toast.success("Reserva solicitada!");
+        setDialogOpen(false);
+        setSpace(""); setDate(""); setStartTime(""); setEndTime(""); setNotes("");
+      }
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleStatus = async (id: string, status: string) => {
-    const { error } = await supabase.from("reservations").update({ status }).eq("id", id);
-    if (error) toast.error("Erro: " + error.message);
-    else toast.success(status === "aprovada" ? "Reserva aprovada!" : "Reserva rejeitada");
+    try {
+      const { error } = await supabase.from("reservations").update({ status }).eq("id", id);
+      if (error) toast.error("Erro: " + error.message);
+      else toast.success(status === "aprovada" ? "Reserva aprovada!" : "Reserva rejeitada");
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    }
   };
 
   return (

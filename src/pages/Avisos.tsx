@@ -30,17 +30,23 @@ const Avisos = () => {
   const handleSubmit = async () => {
     if (!title || !content) { toast.error("Preencha título e conteúdo"); return; }
     setSubmitting(true);
-    const { error } = await supabase.from("notices").insert({
-      title, content, type,
-      date: date || null, location: location || null,
-      author_id: user?.id, author_name: profile?.full_name || "",
-    });
-    setSubmitting(false);
-    if (error) toast.error("Erro: " + error.message);
-    else {
-      toast.success("Aviso publicado!");
-      setDialogOpen(false);
-      setTitle(""); setContent(""); setType("aviso"); setDate(""); setLocation("");
+    try {
+      const { error } = await supabase.from("notices").insert({
+        title, content, type,
+        date: date || null, location: location || null,
+        author_id: user?.id, author_name: profile?.full_name || "",
+      });
+      if (error) toast.error("Erro: " + error.message);
+      else {
+        toast.success("Aviso publicado!");
+        setDialogOpen(false);
+        setTitle(""); setContent(""); setType("aviso"); setDate(""); setLocation("");
+      }
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    } finally {
+      setSubmitting(false);
     }
   };
 

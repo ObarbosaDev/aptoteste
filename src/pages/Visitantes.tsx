@@ -39,25 +39,36 @@ const Visitantes = () => {
   const handleSubmit = async () => {
     if (!name || !document || !block || !unit) { toast.error("Preencha os campos obrigatórios"); return; }
     setSubmitting(true);
-    const { error } = await supabase.from("visitors").insert({
-      name, document, block, unit, resident_name: residentName, vehicle: vehicle || null,
-      registered_by: user?.id,
-    });
-    setSubmitting(false);
-    if (error) toast.error("Erro: " + error.message);
-    else {
-      toast.success("Visitante registrado!");
-      setDialogOpen(false);
-      setName(""); setDocument(""); setBlock(""); setUnit(""); setResidentName(""); setVehicle("");
+    try {
+      const { error } = await supabase.from("visitors").insert({
+        name, document, block, unit, resident_name: residentName, vehicle: vehicle || null,
+        registered_by: user?.id,
+      });
+      if (error) toast.error("Erro: " + error.message);
+      else {
+        toast.success("Visitante registrado!");
+        setDialogOpen(false);
+        setName(""); setDocument(""); setBlock(""); setUnit(""); setResidentName(""); setVehicle("");
+      }
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleExit = async (v: VisitorRow) => {
-    const { error } = await supabase.from("visitors").update({
-      status: "saiu", exit_at: new Date().toISOString(),
-    }).eq("id", v.id);
-    if (error) toast.error("Erro: " + error.message);
-    else toast.success("Saída registrada!");
+    try {
+      const { error } = await supabase.from("visitors").update({
+        status: "saiu", exit_at: new Date().toISOString(),
+      }).eq("id", v.id);
+      if (error) toast.error("Erro: " + error.message);
+      else toast.success("Saída registrada!");
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    }
   };
 
   return (

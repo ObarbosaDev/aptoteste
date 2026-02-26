@@ -31,7 +31,6 @@ const Encomendas = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // Form state
   const [block, setBlock] = useState("");
   const [unit, setUnit] = useState("");
   const [residentName, setResidentName] = useState("");
@@ -47,28 +46,39 @@ const Encomendas = () => {
       return;
     }
     setSubmitting(true);
-    const { error } = await supabase.from("packages").insert({
-      block, unit, resident_name: residentName, type, description,
-      created_by: user?.id,
-    });
-    setSubmitting(false);
-    if (error) {
-      toast.error("Erro ao registrar: " + error.message);
-    } else {
-      toast.success("Encomenda registrada!");
-      setDialogOpen(false);
-      setBlock(""); setUnit(""); setResidentName(""); setType(""); setDescription("");
+    try {
+      const { error } = await supabase.from("packages").insert({
+        block, unit, resident_name: residentName, type, description,
+        created_by: user?.id,
+      });
+      if (error) {
+        toast.error("Erro ao registrar: " + error.message);
+      } else {
+        toast.success("Encomenda registrada!");
+        setDialogOpen(false);
+        setBlock(""); setUnit(""); setResidentName(""); setType(""); setDescription("");
+      }
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handlePickup = async (pkg: PackageRow) => {
-    const { error } = await supabase.from("packages").update({
-      status: "retirada",
-      picked_up_at: new Date().toISOString(),
-      picked_up_by: pkg.resident_name,
-    }).eq("id", pkg.id);
-    if (error) toast.error("Erro: " + error.message);
-    else { toast.success("Retirada confirmada!"); setShowQr(null); }
+    try {
+      const { error } = await supabase.from("packages").update({
+        status: "retirada",
+        picked_up_at: new Date().toISOString(),
+        picked_up_by: pkg.resident_name,
+      }).eq("id", pkg.id);
+      if (error) toast.error("Erro: " + error.message);
+      else { toast.success("Retirada confirmada!"); setShowQr(null); }
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    }
   };
 
   return (

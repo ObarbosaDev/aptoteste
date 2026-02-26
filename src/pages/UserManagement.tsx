@@ -76,36 +76,30 @@ const UserManagement = () => {
       return;
     }
     setSaving(true);
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: newEmail,
+        password: newPassword,
+        options: {
+          data: { full_name: newName, role: newRole },
+        },
+      });
 
-    // We sign up via Supabase auth - the trigger will create profile & role
-    const { error } = await supabase.auth.signUp({
-      email: newEmail,
-      password: newPassword,
-      options: {
-        data: { full_name: newName, role: newRole },
-      },
-    });
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
 
-    if (error) {
-      toast.error(error.message);
+      toast.success(`${roleLabels[newRole]} adicionado com sucesso!`);
+      setOpen(false);
+      setNewName(""); setNewEmail(""); setNewPassword(""); setNewRole("morador"); setNewUnit(""); setNewBlock("");
+      setTimeout(fetchUsers, 1000);
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    } finally {
       setSaving(false);
-      return;
     }
-
-    // Note: Since we're signing up from the sindico's session, we need to handle this carefully
-    // The trigger will create the profile. Let's refresh the list.
-    toast.success(`${roleLabels[newRole]} adicionado com sucesso!`);
-    setOpen(false);
-    setNewName("");
-    setNewEmail("");
-    setNewPassword("");
-    setNewRole("morador");
-    setNewUnit("");
-    setNewBlock("");
-    setSaving(false);
-
-    // Refresh after a short delay for the trigger to complete
-    setTimeout(fetchUsers, 1000);
   };
 
   if (currentRole !== "sindico") {
