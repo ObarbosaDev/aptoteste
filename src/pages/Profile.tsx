@@ -31,18 +31,24 @@ const Profile = () => {
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
-    const { error } = await supabase.from("profiles").update({
-      full_name: fullName,
-      phone,
-      unit,
-      block,
-    }).eq("user_id", user.id);
-    setSaving(false);
-    if (error) {
-      toast.error("Erro ao salvar perfil");
-    } else {
-      toast.success("Perfil atualizado!");
-      await refreshProfile();
+    try {
+      const { error } = await supabase.from("profiles").update({
+        full_name: fullName,
+        phone,
+        unit,
+        block,
+      }).eq("user_id", user.id);
+      if (error) {
+        toast.error("Erro ao salvar perfil");
+      } else {
+        toast.success("Perfil atualizado!");
+        await refreshProfile();
+      }
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    } finally {
+      setSaving(false);
     }
   };
 

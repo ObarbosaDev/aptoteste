@@ -43,7 +43,6 @@ const Ocorrencias = () => {
 
   const filtered = filter === "all" ? occurrences : occurrences.filter((o) => o.status === filter);
 
-  // Load events when selected
   useEffect(() => {
     if (!selected) { setEvents([]); return; }
     supabase.from("occurrence_events").select("*").eq("occurrence_id", selected.id).order("created_at", { ascending: true })
@@ -53,43 +52,58 @@ const Ocorrencias = () => {
   const handleSubmit = async () => {
     if (!type || !title || !description) { toast.error("Preencha todos os campos"); return; }
     setSubmitting(true);
-    const { error } = await supabase.from("occurrences").insert({
-      type, title, description,
-      resident_id: user?.id,
-      resident_name: profile?.full_name || "",
-      unit: profile?.unit || "",
-      block: profile?.block || "",
-    });
-    setSubmitting(false);
-    if (error) toast.error("Erro: " + error.message);
-    else {
-      toast.success("Ocorrência registrada!");
-      setDialogOpen(false);
-      setType(""); setTitle(""); setDescription("");
+    try {
+      const { error } = await supabase.from("occurrences").insert({
+        type, title, description,
+        resident_id: user?.id,
+        resident_name: profile?.full_name || "",
+        unit: profile?.unit || "",
+        block: profile?.block || "",
+      });
+      if (error) toast.error("Erro: " + error.message);
+      else {
+        toast.success("Ocorrência registrada!");
+        setDialogOpen(false);
+        setType(""); setTitle(""); setDescription("");
+      }
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleReply = async () => {
     if (!reply || !selected) return;
-    const { error } = await supabase.from("occurrence_events").insert({
-      occurrence_id: selected.id,
-      action: reply,
-      performed_by: profile?.full_name || "",
-    });
-    if (error) toast.error("Erro: " + error.message);
-    else {
-      toast.success("Resposta enviada!");
-      setReply("");
-      // Refresh events
-      const { data } = await supabase.from("occurrence_events").select("*").eq("occurrence_id", selected.id).order("created_at", { ascending: true });
-      if (data) setEvents(data);
+    try {
+      const { error } = await supabase.from("occurrence_events").insert({
+        occurrence_id: selected.id,
+        action: reply,
+        performed_by: profile?.full_name || "",
+      });
+      if (error) toast.error("Erro: " + error.message);
+      else {
+        toast.success("Resposta enviada!");
+        setReply("");
+        const { data } = await supabase.from("occurrence_events").select("*").eq("occurrence_id", selected.id).order("created_at", { ascending: true });
+        if (data) setEvents(data);
+      }
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
     }
   };
 
   const handleStatusChange = async (id: string, status: string) => {
-    const { error } = await supabase.from("occurrences").update({ status }).eq("id", id);
-    if (error) toast.error("Erro: " + error.message);
-    else toast.success("Status atualizado!");
+    try {
+      const { error } = await supabase.from("occurrences").update({ status }).eq("id", id);
+      if (error) toast.error("Erro: " + error.message);
+      else toast.success("Status atualizado!");
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
+    }
   };
 
   return (
