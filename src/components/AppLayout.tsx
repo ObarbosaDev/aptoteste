@@ -20,7 +20,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 
 type NavItem = { title: string; url: string; icon: React.ElementType; roles: AppRole[] };
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth, AppRole } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Plus, Loader2, Users, Shield, DoorOpen, User, Trash2 } from "lucide-react";
+import { Plus, Loader2, Users, Shield, DoorOpen, User } from "lucide-react";
 import { toast } from "sonner";
 
 interface UserWithRole {
