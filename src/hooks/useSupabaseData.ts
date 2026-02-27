@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 // Generic realtime hook
@@ -13,16 +12,25 @@ export function useRealtimeTable<T extends { id: string }>(
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-    const { data: rows, error } = await (supabase
-      .from(table as any)
-      .select("*")
-      .order(orderBy, { ascending }) as any);
-    if (error) {
-      console.error(`Error fetching ${table}:`, error);
-    } else {
+    try {
+      const { data: rows, error } = await (supabase
+        .from(table as any)
+        .select("*")
+        .order(orderBy, { ascending }) as any);
+
+      if (error) {
+        console.error(`Error fetching ${table}:`, error);
+        toast.error(`Falha ao carregar ${table}.`);
+        return;
+      }
+
       setData((rows || []) as T[]);
+    } catch (err) {
+      console.error(`Unexpected error fetching ${table}:`, err);
+      toast.error("Erro inesperado ao carregar dados.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [table, orderBy, ascending]);
 
   useEffect(() => {
@@ -58,22 +66,38 @@ export function useDashboardStats() {
   const [loading, setLoading] = useState(true);
 
   const fetchStats = useCallback(async () => {
-    const today = new Date().toISOString().split("T")[0];
-    
-    const [pkgRes, profilesRes, visitorsRes, occRes] = await Promise.all([
-      supabase.from("packages").select("id", { count: "exact", head: true }).eq("status", "pendente"),
-      supabase.from("profiles").select("id", { count: "exact", head: true }),
-      supabase.from("visitors").select("id", { count: "exact", head: true }).gte("entry_at", today),
-      supabase.from("occurrences").select("id", { count: "exact", head: true }).neq("status", "resolvida"),
-    ]);
+    try {
+      const today = new Date().toISOString().split("T")[0];
 
-    setStats({
-      pendingPackages: pkgRes.count || 0,
-      activeResidents: profilesRes.count || 0,
-      visitorsToday: visitorsRes.count || 0,
-      openOccurrences: occRes.count || 0,
-    });
-    setLoading(false);
+      const [pkgRes, profilesRes, visitorsRes, occRes] = await Promise.all([
+        supabase.from("packages").select("id", { count: "exact", head: true }).eq("status", "pendente"),
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase.from("visitors").select("id", { count: "exact", head: true }).gte("entry_at", today),
+        supabase.from("occurrences").select("id", { count: "exact", head: true }).neq("status", "resolvida"),
+      ]);
+
+      if (pkgRes.error || profilesRes.error || visitorsRes.error || occRes.error) {
+        console.error("Erro ao calcular estatísticas:", {
+          pkg: pkgRes.error,
+          profiles: profilesRes.error,
+          visitors: visitorsRes.error,
+          occurrences: occRes.error,
+        });
+        return;
+      }
+
+      setStats({
+        pendingPackages: pkgRes.count || 0,
+        activeResidents: profilesRes.count || 0,
+        visitorsToday: visitorsRes.count || 0,
+        openOccurrences: occRes.count || 0,
+      });
+    } catch (err) {
+      console.error("Unexpected error fetching dashboard stats:", err);
+      toast.error("Erro ao atualizar números do dashboard.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -94,3 +118,4 @@ export function useDashboardStats() {
 
   return { stats, loading };
 }
+
