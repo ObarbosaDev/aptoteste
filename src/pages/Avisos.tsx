@@ -5,10 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRealtimeTable } from "@/hooks/useSupabaseData";
-import { Plus, Megaphone, CalendarDays, MapPin, Loader2 } from "lucide-react";
+import { Plus, Megaphone, CalendarDays, MapPin, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -47,6 +48,17 @@ const Avisos = () => {
       toast.error("Erro inesperado. Tente novamente.");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase.from("notices").delete().eq("id", id);
+      if (error) toast.error("Erro ao excluir: " + error.message);
+      else toast.success("Aviso excluído!");
+    } catch (err) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado. Tente novamente.");
     }
   };
 
@@ -111,6 +123,29 @@ const Avisos = () => {
                       {n.location && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{n.location}</span>}
                     </div>
                   </div>
+                  {isSindico && (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Excluir aviso</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Tem certeza que deseja excluir "{n.title}"? Esta ação não pode ser desfeita.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => handleDelete(n.id)}>
+                            Excluir
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
                 </div>
               </CardContent>
             </Card>
