@@ -29,7 +29,7 @@ const Reservas = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const [space, setSpace] = useState("");
+  const [space, setSpace] = useState<string | undefined>(undefined);
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -50,7 +50,7 @@ const Reservas = () => {
       else {
         toast.success("Reserva solicitada!");
         setDialogOpen(false);
-        setSpace(""); setDate(""); setStartTime(""); setEndTime(""); setNotes("");
+        setSpace(undefined); setDate(""); setStartTime(""); setEndTime(""); setNotes("");
       }
     } catch (err: any) {
       console.error("Erro inesperado:", err);

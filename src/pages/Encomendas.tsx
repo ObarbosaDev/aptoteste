@@ -34,7 +34,7 @@ const Encomendas = () => {
   const [block, setBlock] = useState("");
   const [unit, setUnit] = useState("");
   const [residentName, setResidentName] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState<string | undefined>(undefined);
   const [description, setDescription] = useState("");
 
   const canManage = role === "porteiro" || role === "sindico";
@@ -56,7 +56,7 @@ const Encomendas = () => {
       } else {
         toast.success("Encomenda registrada!");
         setDialogOpen(false);
-        setBlock(""); setUnit(""); setResidentName(""); setType(""); setDescription("");
+        setBlock(""); setUnit(""); setResidentName(""); setType(undefined); setDescription("");
       }
     } catch (err: any) {
       console.error("Erro inesperado:", err);
