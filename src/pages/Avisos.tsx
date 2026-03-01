@@ -63,31 +63,31 @@ const Avisos = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Avisos & Assembleias</h1>
-          <p className="text-muted-foreground">Comunicados do condomínio</p>
+        <div className="page-header mb-0">
+          <h1>Avisos & Assembleias</h1>
+          <p>Comunicados do condomínio</p>
         </div>
         {isSindico && (
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Novo Aviso</Button></DialogTrigger>
+            <DialogTrigger asChild><Button className="gradient-primary border-0 shadow-lg shadow-primary/20 font-semibold"><Plus className="mr-2 h-4 w-4" />Novo Aviso</Button></DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>Criar Aviso</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle className="font-heading">Criar Aviso</DialogTitle></DialogHeader>
               <div className="space-y-4">
-                <div className="space-y-1"><Label>Título</Label><Input placeholder="Título do aviso" value={title} onChange={(e) => setTitle(e.target.value)} /></div>
-                <div className="space-y-1"><Label>Conteúdo</Label><Textarea placeholder="Conteúdo do aviso" rows={4} value={content} onChange={(e) => setContent(e.target.value)} /></div>
-                <div className="space-y-1"><Label>Tipo</Label>
+                <div className="space-y-1.5"><Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Título</Label><Input placeholder="Título do aviso" value={title} onChange={(e) => setTitle(e.target.value)} className="h-11" /></div>
+                <div className="space-y-1.5"><Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Conteúdo</Label><Textarea placeholder="Conteúdo do aviso" rows={4} value={content} onChange={(e) => setContent(e.target.value)} /></div>
+                <div className="space-y-1.5"><Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tipo</Label>
                   <div className="flex gap-2">
-                    <Button variant={type === "aviso" ? "default" : "outline"} size="sm" onClick={() => setType("aviso")}>Aviso</Button>
-                    <Button variant={type === "assembleia" ? "default" : "outline"} size="sm" onClick={() => setType("assembleia")}>Assembleia</Button>
+                    <Button variant={type === "aviso" ? "default" : "outline"} size="sm" onClick={() => setType("aviso")} className={type === "aviso" ? "gradient-primary border-0" : "border-2"}>Aviso</Button>
+                    <Button variant={type === "assembleia" ? "default" : "outline"} size="sm" onClick={() => setType("assembleia")} className={type === "assembleia" ? "gradient-primary border-0" : "border-2"}>Assembleia</Button>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1"><Label>Data (opcional)</Label><Input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></div>
-                  <div className="space-y-1"><Label>Local (opcional)</Label><Input placeholder="Local" value={location} onChange={(e) => setLocation(e.target.value)} /></div>
+                  <div className="space-y-1.5"><Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Data (opcional)</Label><Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="h-11" /></div>
+                  <div className="space-y-1.5"><Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Local (opcional)</Label><Input placeholder="Local" value={location} onChange={(e) => setLocation(e.target.value)} className="h-11" /></div>
                 </div>
-                <Button className="w-full" onClick={handleSubmit} disabled={submitting}>
+                <Button className="w-full h-11 gradient-primary border-0 font-semibold shadow-lg shadow-primary/20" onClick={handleSubmit} disabled={submitting}>
                   {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Publicar
                 </Button>
               </div>
@@ -103,17 +103,17 @@ const Avisos = () => {
       ) : (
         <div className="space-y-4">
           {notices.map((n) => (
-            <Card key={n.id} className={n.is_new ? "border-primary/30" : ""}>
+            <Card key={n.id} className={`shadow-card border-0 hover:shadow-card-hover transition-shadow duration-300 ${n.is_new ? "ring-1 ring-primary/20" : ""}`}>
               <CardContent className="p-5">
-                <div className="flex items-start gap-3">
-                  <div className={`mt-0.5 rounded-lg p-2 ${n.type === "assembleia" ? "bg-warning/10 text-warning" : "bg-primary/10 text-primary"}`}>
-                    <Megaphone className="h-4 w-4" />
+                <div className="flex items-start gap-4">
+                  <div className={`mt-0.5 stat-icon shrink-0 ${n.type === "assembleia" ? "bg-warning/10 text-warning" : "bg-primary/10 text-primary"}`}>
+                    <Megaphone className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">{n.title}</h3>
-                      {n.is_new && <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] text-primary-foreground">Novo</span>}
-                      <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground capitalize">{n.type}</span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-heading font-bold">{n.title}</h3>
+                      {n.is_new && <span className="rounded-full gradient-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground">Novo</span>}
+                      <span className="rounded-full bg-muted px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground capitalize">{n.type}</span>
                     </div>
                     <p className="mt-1.5 text-sm text-muted-foreground">{n.content}</p>
                     <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
