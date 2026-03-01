@@ -1,16 +1,9 @@
 import { useAuth, AppRole } from "@/contexts/AuthContext";
 import { NavLink } from "@/components/NavLink";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
+  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
+  SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
+  SidebarProvider, SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard, Package, CalendarDays, Megaphone, AlertTriangle,
@@ -20,7 +13,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 
 type NavItem = { title: string; url: string; icon: React.ElementType; roles: AppRole[] };
 
@@ -57,19 +49,20 @@ function AppSidebarContent() {
 
   return (
     <Sidebar className="border-r-0">
-      <div className="flex items-center gap-2.5 px-4 py-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground shadow-sm">
+      {/* Logo */}
+      <div className="flex items-center gap-3 px-5 py-6">
+        <div className="gradient-primary flex h-10 w-10 items-center justify-center rounded-xl text-primary-foreground shadow-lg shadow-primary/25">
           <Building2 className="h-5 w-5" />
         </div>
         <div>
-          <span className="font-bold text-sidebar-foreground text-sm">CondoApp</span>
-          <p className="text-[10px] text-sidebar-muted leading-none">Gestão Condominial</p>
+          <span className="font-heading font-bold text-sidebar-foreground text-sm tracking-tight">CondoApp</span>
+          <p className="text-[10px] text-sidebar-muted leading-none mt-0.5">Gestão Condominial</p>
         </div>
       </div>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-sidebar-muted text-[10px] uppercase tracking-wider">Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-sidebar-muted text-[10px] uppercase tracking-widest font-semibold px-5">Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {filtered.map((item) => (
@@ -78,10 +71,10 @@ function AppSidebarContent() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/dashboard"}
-                      className="text-sidebar-foreground hover:bg-sidebar-accent"
-                      activeClassName="bg-sidebar-accent text-sidebar-primary font-medium"
+                      className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-all duration-200"
+                      activeClassName="bg-sidebar-accent text-sidebar-primary font-semibold"
                     >
-                      <item.icon className="mr-2 h-4 w-4" />
+                      <item.icon className="mr-2.5 h-4 w-4" />
                       <span>{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
@@ -93,7 +86,7 @@ function AppSidebarContent() {
 
         {management.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel className="text-sidebar-muted text-[10px] uppercase tracking-wider">Administração</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-sidebar-muted text-[10px] uppercase tracking-widest font-semibold px-5">Administração</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {management.map((item) => (
@@ -101,10 +94,10 @@ function AppSidebarContent() {
                     <SidebarMenuButton asChild>
                       <NavLink
                         to={item.url}
-                        className="text-sidebar-foreground hover:bg-sidebar-accent"
-                        activeClassName="bg-sidebar-accent text-sidebar-primary font-medium"
+                        className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-all duration-200"
+                        activeClassName="bg-sidebar-accent text-sidebar-primary font-semibold"
                       >
-                        <item.icon className="mr-2 h-4 w-4" />
+                        <item.icon className="mr-2.5 h-4 w-4" />
                         <span>{item.title}</span>
                       </NavLink>
                     </SidebarMenuButton>
@@ -122,10 +115,10 @@ function AppSidebarContent() {
                 <SidebarMenuButton asChild>
                   <NavLink
                     to="/perfil"
-                    className="text-sidebar-foreground hover:bg-sidebar-accent"
-                    activeClassName="bg-sidebar-accent text-sidebar-primary font-medium"
+                    className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-all duration-200"
+                    activeClassName="bg-sidebar-accent text-sidebar-primary font-semibold"
                   >
-                    <UserCircle className="mr-2 h-4 w-4" />
+                    <UserCircle className="mr-2.5 h-4 w-4" />
                     <span>Meu Perfil</span>
                   </NavLink>
                 </SidebarMenuButton>
@@ -135,15 +128,16 @@ function AppSidebarContent() {
         </SidebarGroup>
       </SidebarContent>
 
+      {/* User card */}
       <div className="mt-auto border-t border-sidebar-border p-4">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-9 w-9">
-            <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-xs font-semibold">
+        <div className="flex items-center gap-3 rounded-xl bg-sidebar-accent/50 p-3">
+          <Avatar className="h-9 w-9 ring-2 ring-sidebar-primary/20">
+            <AvatarFallback className="gradient-primary text-primary-foreground text-xs font-bold">
               {initials}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-sidebar-foreground truncate">{profile?.full_name || "Carregando..."}</p>
+            <p className="text-sm font-semibold text-sidebar-foreground truncate">{profile?.full_name || "Carregando..."}</p>
             <p className="text-[11px] text-sidebar-muted">{role ? roleLabels[role] : ""}</p>
           </div>
           <Button variant="ghost" size="icon" onClick={handleLogout} className="text-sidebar-muted hover:text-sidebar-foreground h-8 w-8">
@@ -157,7 +151,7 @@ function AppSidebarContent() {
 
 export default function AppLayout() {
   const [dark, setDark] = useState(false);
-  const { profile, role, loading } = useAuth();
+  const { role, loading } = useAuth();
 
   const toggleDark = () => {
     setDark((d) => {
@@ -168,8 +162,11 @@ export default function AppLayout() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3">
+          <div className="gradient-primary h-10 w-10 rounded-xl animate-pulse" />
+          <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent" />
+        </div>
       </div>
     );
   }
@@ -179,19 +176,19 @@ export default function AppLayout() {
       <div className="flex min-h-screen w-full">
         <AppSidebarContent />
         <div className="flex flex-1 flex-col">
-          <header className="flex h-14 items-center gap-3 border-b bg-card px-4">
+          <header className="flex h-16 items-center gap-3 border-b bg-card/80 backdrop-blur-xl px-6 sticky top-0 z-10">
             <SidebarTrigger />
             <div className="flex-1" />
             {role && (
-              <span className="text-xs font-medium text-muted-foreground rounded-full bg-primary/10 px-3 py-1">
+              <span className="text-xs font-semibold text-primary rounded-full gradient-primary bg-clip-text text-transparent px-3 py-1.5 border border-primary/20 bg-primary/5">
                 {roleLabels[role]}
               </span>
             )}
-            <Button variant="ghost" size="icon" onClick={toggleDark} className="h-8 w-8">
+            <Button variant="ghost" size="icon" onClick={toggleDark} className="h-9 w-9 rounded-xl hover:bg-accent">
               {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
           </header>
-          <main className="flex-1 overflow-auto p-4 md:p-6 bg-background">
+          <main className="flex-1 overflow-auto p-5 md:p-8 bg-background">
             <Outlet />
           </main>
         </div>

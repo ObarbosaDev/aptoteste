@@ -82,27 +82,27 @@ const Encomendas = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Encomendas</h1>
-          <p className="text-muted-foreground">Gestão de encomendas do condomínio</p>
+        <div className="page-header mb-0">
+          <h1>Encomendas</h1>
+          <p>Gestão de encomendas do condomínio</p>
         </div>
         {canManage && (
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button><Plus className="mr-2 h-4 w-4" />Nova Encomenda</Button>
+              <Button className="gradient-primary border-0 shadow-lg shadow-primary/20 font-semibold"><Plus className="mr-2 h-4 w-4" />Nova Encomenda</Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>Registrar Encomenda</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle className="font-heading">Registrar Encomenda</DialogTitle></DialogHeader>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1"><Label>Bloco</Label><Input placeholder="A" value={block} onChange={(e) => setBlock(e.target.value)} /></div>
-                  <div className="space-y-1"><Label>Unidade</Label><Input placeholder="101" value={unit} onChange={(e) => setUnit(e.target.value)} /></div>
+                  <div className="space-y-1.5"><Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Bloco</Label><Input placeholder="A" value={block} onChange={(e) => setBlock(e.target.value)} className="h-11" /></div>
+                  <div className="space-y-1.5"><Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Unidade</Label><Input placeholder="101" value={unit} onChange={(e) => setUnit(e.target.value)} className="h-11" /></div>
                 </div>
-                <div className="space-y-1"><Label>Morador</Label><Input placeholder="Nome do morador" value={residentName} onChange={(e) => setResidentName(e.target.value)} /></div>
-                <div className="space-y-1"><Label>Tipo</Label>
-                  <Select value={type} onValueChange={setType}><SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                <div className="space-y-1.5"><Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Morador</Label><Input placeholder="Nome do morador" value={residentName} onChange={(e) => setResidentName(e.target.value)} className="h-11" /></div>
+                <div className="space-y-1.5"><Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tipo</Label>
+                  <Select value={type} onValueChange={setType}><SelectTrigger className="h-11"><SelectValue placeholder="Selecione" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="caixa">Caixa</SelectItem>
                       <SelectItem value="envelope">Envelope</SelectItem>
@@ -111,8 +111,8 @@ const Encomendas = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-1"><Label>Descrição</Label><Input placeholder="Descrição da encomenda" value={description} onChange={(e) => setDescription(e.target.value)} /></div>
-                <Button className="w-full" onClick={handleSubmit} disabled={submitting}>
+                <div className="space-y-1.5"><Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Descrição</Label><Input placeholder="Descrição da encomenda" value={description} onChange={(e) => setDescription(e.target.value)} className="h-11" /></div>
+                <Button className="w-full h-11 gradient-primary border-0 font-semibold shadow-lg shadow-primary/20" onClick={handleSubmit} disabled={submitting}>
                   {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Registrar
                 </Button>
               </div>
@@ -123,11 +123,11 @@ const Encomendas = () => {
 
       <div className="flex gap-2">
         {[{ v: "all", l: "Todas" }, { v: "pendente", l: "Pendentes" }, { v: "retirada", l: "Retiradas" }].map((f) => (
-          <Button key={f.v} variant={filter === f.v ? "default" : "outline"} size="sm" onClick={() => setFilter(f.v)}>{f.l}</Button>
+          <Button key={f.v} variant={filter === f.v ? "default" : "outline"} size="sm" onClick={() => setFilter(f.v)} className={`rounded-lg font-semibold ${filter === f.v ? "gradient-primary border-0 shadow-sm shadow-primary/20" : "border-2"}`}>{f.l}</Button>
         ))}
       </div>
 
-      <Card>
+      <Card className="shadow-card border-0">
         <CardContent className="p-0">
           {loading ? (
             <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
